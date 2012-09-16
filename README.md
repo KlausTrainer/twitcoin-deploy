@@ -1,8 +1,9 @@
 # Twitcoin Server Provisioning Recipes
 
 These [Sunzi](https://github.com/kenn/sunzi) recipes are used for the setup and
-the initial deployment of [Twitcoin](https://twitcoin.net). They are targeted
-at a bare Ubuntu 12.04 server.
+the initial deployment of [Twitcoin](https://twitcoin.net). See
+[here](https://github.com/KlausTrainer/twitcoin) the Twitcoin source code.
+The recipes are targeted at a bare Ubuntu 12.04 server.
 
 ## Installation
 
