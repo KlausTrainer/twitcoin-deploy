@@ -14,7 +14,7 @@ cd otp
 git checkout $ERLANG_GIT_REF
 
 ./otp_build autoconf
-./configure --prefix=/usr/local --without-javac --enable-halfword-emulator
-make -j 4 && make install
+./configure --prefix=/usr/local --without-javac --enable-halfword-emulator --disable-hipe
+make -j 2 && make install
 
 cd $SUNZI_WORKING_DIRECTORY
