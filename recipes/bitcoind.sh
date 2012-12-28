@@ -13,7 +13,7 @@ git clone --depth=1 https://github.com/bitcoin/bitcoin.git
 cd bitcoin/src
 git checkout $BITCOIND_GIT_REF
 
-USE_UPNP=- make -j 4 -e -f makefile.unix
+USE_UPNP=- make -j 2 -e -f makefile.unix
 
 if ! id -u bitcoind &> /dev/null; then
     adduser --system bitcoind
