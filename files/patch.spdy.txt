@@ -148,9 +148,9 @@ Index: src/http/ngx_http_spdy.h
 +#endif /* _NGX_HTTP_SPDY_H_INCLUDED_ */
 Index: src/http/ngx_http.h
 ===================================================================
---- src/http/ngx_http.h	(revision 4899)
+--- src/http/ngx_http.h	(revision 4942)
 +++ src/http/ngx_http.h	(working copy)
-@@ -23,7 +23,11 @@
+@@ -24,7 +24,11 @@
      ngx_table_elt_t *h, ngx_uint_t offset);
  typedef u_char *(*ngx_http_log_handler_pt)(ngx_http_request_t *r,
      ngx_http_request_t *sr, u_char *buf, size_t len);
@@ -162,7 +162,7 @@ Index: src/http/ngx_http.h
  
  #include <ngx_http_variables.h>
  #include <ngx_http_request.h>
-@@ -34,6 +38,10 @@
+@@ -35,6 +39,10 @@
  #include <ngx_http_script.h>
  #include <ngx_http_core_module.h>
  
@@ -173,7 +173,7 @@ Index: src/http/ngx_http.h
  #if (NGX_HTTP_CACHE)
  #include <ngx_http_cache.h>
  #endif
-@@ -78,6 +86,7 @@
+@@ -86,6 +94,7 @@
  #endif
  
  ngx_int_t ngx_http_parse_request_line(ngx_http_request_t *r, ngx_buf_t *b);
@@ -181,15 +181,15 @@ Index: src/http/ngx_http.h
  ngx_int_t ngx_http_parse_complex_uri(ngx_http_request_t *r,
      ngx_uint_t merge_slashes);
  ngx_int_t ngx_http_parse_status_line(ngx_http_request_t *r, ngx_buf_t *b,
-@@ -94,6 +103,7 @@
-     ngx_str_t *args);
+@@ -104,6 +113,7 @@
+     ngx_http_chunked_t *ctx);
  
  
 +ngx_int_t ngx_http_process_request_header(ngx_http_request_t *r);
  ngx_int_t ngx_http_find_server_conf(ngx_http_request_t *r);
  void ngx_http_update_location_config(ngx_http_request_t *r);
  void ngx_http_handler(ngx_http_request_t *r);
-@@ -101,6 +111,7 @@
+@@ -111,6 +121,7 @@
  ngx_int_t ngx_http_post_request(ngx_http_request_t *r,
      ngx_http_posted_request_t *pr);
  void ngx_http_finalize_request(ngx_http_request_t *r, ngx_int_t rc);
@@ -199,7 +199,7 @@ Index: src/http/ngx_http.h
  void ngx_http_request_empty_handler(ngx_http_request_t *r);
 Index: src/http/ngx_http_parse.c
 ===================================================================
---- src/http/ngx_http_parse.c	(revision 4899)
+--- src/http/ngx_http_parse.c	(revision 4942)
 +++ src/http/ngx_http_parse.c	(working copy)
 @@ -1075,6 +1075,154 @@
  
@@ -358,7 +358,7 @@ Index: src/http/ngx_http_parse.c
      u_char  c, ch, decoded, *p, *u;
 Index: src/http/modules/ngx_http_ssl_module.c
 ===================================================================
---- src/http/modules/ngx_http_ssl_module.c	(revision 4899)
+--- src/http/modules/ngx_http_ssl_module.c	(revision 4942)
 +++ src/http/modules/ngx_http_ssl_module.c	(working copy)
 @@ -262,6 +262,31 @@
  static ngx_str_t ngx_http_ssl_sess_id_ctx = ngx_string("HTTP");
@@ -406,7 +406,7 @@ Index: src/http/modules/ngx_http_ssl_module.c
          return NGX_CONF_ERROR;
 Index: src/http/modules/ngx_http_limit_req_module.c
 ===================================================================
---- src/http/modules/ngx_http_limit_req_module.c	(revision 4899)
+--- src/http/modules/ngx_http_limit_req_module.c	(revision 4942)
 +++ src/http/modules/ngx_http_limit_req_module.c	(working copy)
 @@ -56,7 +56,8 @@
  } ngx_http_limit_req_conf_t;
@@ -877,7 +877,7 @@ Index: src/http/ngx_http_spdy_module.c
 +}
 Index: src/http/ngx_http_request.c
 ===================================================================
---- src/http/ngx_http_request.c	(revision 4899)
+--- src/http/ngx_http_request.c	(revision 4942)
 +++ src/http/ngx_http_request.c	(working copy)
 @@ -30,7 +30,6 @@
  static ngx_int_t ngx_http_process_cookie(ngx_http_request_t *r,
@@ -994,7 +994,7 @@ Index: src/http/ngx_http_request.c
  ngx_http_process_request_header(ngx_http_request_t *r)
  {
      if (ngx_http_find_virtual_server(r, r->headers_in.server.data,
-@@ -1943,6 +1983,11 @@
+@@ -1946,6 +1986,11 @@
      ngx_http_request_t        *pr;
      ngx_http_core_loc_conf_t  *clcf;
  
@@ -1006,7 +1006,7 @@ Index: src/http/ngx_http_request.c
      c = r->connection;
  
      ngx_log_debug5(NGX_LOG_DEBUG_HTTP, c->log, 0,
-@@ -3090,7 +3135,7 @@
+@@ -3093,7 +3138,7 @@
  }
  
  
@@ -1015,6 +1015,48 @@ Index: src/http/ngx_http_request.c
  ngx_http_log_request(ngx_http_request_t *r)
  {
      ngx_uint_t                  i, n;
+Index: src/http/ngx_http_spdy_module.h
+===================================================================
+--- src/http/ngx_http_spdy_module.h	(revision 0)
++++ src/http/ngx_http_spdy_module.h	(revision 0)
+@@ -0,0 +1,37 @@
++
++/*
++ * Copyright (C) Nginx, Inc.
++ * Copyright (C) Valentin V. Bartenev
++ */
++
++
++#ifndef _NGX_HTTP_SPDY_MODULE_H_INCLUDED_
++#define _NGX_HTTP_SPDY_MODULE_H_INCLUDED_
++
++
++#include <ngx_config.h>
++#include <ngx_core.h>
++#include <ngx_http.h>
++
++
++typedef struct {
++    ngx_flag_t                      enable;
++    size_t                          recv_buffer_size;
++} ngx_http_spdy_main_conf_t;
++
++
++typedef struct {
++    ngx_uint_t                      concurrent_streams;
++    ngx_uint_t                      streams_index_mask;
++    ngx_msec_t                      recv_timeout;
++    ngx_msec_t                      keepalive_timeout;
++    ngx_int_t                       headers_comp;
++    size_t                          headers_comp_wbits;
++    size_t                          headers_comp_memlevel;
++} ngx_http_spdy_srv_conf_t;
++
++
++extern ngx_module_t  ngx_http_spdy_module;
++
++
++#endif /* _NGX_HTTP_SPDY_MODULE_H_INCLUDED_ */
 Index: src/http/ngx_http_spdy_filter_module.c
 ===================================================================
 --- src/http/ngx_http_spdy_filter_module.c	(revision 0)
@@ -1863,76 +1905,11 @@ Index: src/http/ngx_http_spdy_filter_module.c
 +
 +    return NGX_OK;
 +}
-Index: src/http/ngx_http_spdy_module.h
-===================================================================
---- src/http/ngx_http_spdy_module.h	(revision 0)
-+++ src/http/ngx_http_spdy_module.h	(revision 0)
-@@ -0,0 +1,37 @@
-+
-+/*
-+ * Copyright (C) Nginx, Inc.
-+ * Copyright (C) Valentin V. Bartenev
-+ */
-+
-+
-+#ifndef _NGX_HTTP_SPDY_MODULE_H_INCLUDED_
-+#define _NGX_HTTP_SPDY_MODULE_H_INCLUDED_
-+
-+
-+#include <ngx_config.h>
-+#include <ngx_core.h>
-+#include <ngx_http.h>
-+
-+
-+typedef struct {
-+    ngx_flag_t                      enable;
-+    size_t                          recv_buffer_size;
-+} ngx_http_spdy_main_conf_t;
-+
-+
-+typedef struct {
-+    ngx_uint_t                      concurrent_streams;
-+    ngx_uint_t                      streams_index_mask;
-+    ngx_msec_t                      recv_timeout;
-+    ngx_msec_t                      keepalive_timeout;
-+    ngx_int_t                       headers_comp;
-+    size_t                          headers_comp_wbits;
-+    size_t                          headers_comp_memlevel;
-+} ngx_http_spdy_srv_conf_t;
-+
-+
-+extern ngx_module_t  ngx_http_spdy_module;
-+
-+
-+#endif /* _NGX_HTTP_SPDY_MODULE_H_INCLUDED_ */
-Index: src/http/ngx_http_request.h
-===================================================================
---- src/http/ngx_http_request.h	(revision 4899)
-+++ src/http/ngx_http_request.h	(working copy)
-@@ -269,8 +269,6 @@
- } ngx_http_headers_out_t;
- 
- 
--typedef void (*ngx_http_client_body_handler_pt)(ngx_http_request_t *r);
--
- typedef struct {
-     ngx_temp_file_t                  *temp_file;
-     ngx_chain_t                      *bufs;
-@@ -422,6 +420,9 @@
-     ngx_uint_t                        err_status;
- 
-     ngx_http_connection_t            *http_connection;
-+#if (NGX_HTTP_SPDY)
-+    ngx_http_spdy_stream_t           *spdy_stream;
-+#endif
- 
-     ngx_http_log_handler_pt           log_handler;
- 
 Index: src/http/ngx_http_core_module.c
 ===================================================================
---- src/http/ngx_http_core_module.c	(revision 4899)
+--- src/http/ngx_http_core_module.c	(revision 4942)
 +++ src/http/ngx_http_core_module.c	(working copy)
-@@ -2129,6 +2129,13 @@
+@@ -2130,6 +2130,13 @@
          return NGX_DECLINED;
      }
  
@@ -1946,7 +1923,7 @@ Index: src/http/ngx_http_core_module.c
      ae = r->headers_in.accept_encoding;
      if (ae == NULL) {
          return NGX_DECLINED;
-@@ -4074,6 +4081,18 @@
+@@ -4075,6 +4082,18 @@
  #endif
          }
  
@@ -1965,9 +1942,32 @@ Index: src/http/ngx_http_core_module.c
          if (ngx_strncmp(value[n].data, "so_keepalive=", 13) == 0) {
  
              if (ngx_strcmp(&value[n].data[13], "on") == 0) {
+Index: src/http/ngx_http_request.h
+===================================================================
+--- src/http/ngx_http_request.h	(revision 4942)
++++ src/http/ngx_http_request.h	(working copy)
+@@ -270,8 +270,6 @@
+ } ngx_http_headers_out_t;
+ 
+ 
+-typedef void (*ngx_http_client_body_handler_pt)(ngx_http_request_t *r);
+-
+ typedef struct {
+     ngx_temp_file_t                  *temp_file;
+     ngx_chain_t                      *bufs;
+@@ -425,6 +423,9 @@
+     ngx_uint_t                        err_status;
+ 
+     ngx_http_connection_t            *http_connection;
++#if (NGX_HTTP_SPDY)
++    ngx_http_spdy_stream_t           *spdy_stream;
++#endif
+ 
+     ngx_http_log_handler_pt           log_handler;
+ 
 Index: src/http/ngx_http_upstream.c
 ===================================================================
---- src/http/ngx_http_upstream.c	(revision 4899)
+--- src/http/ngx_http_upstream.c	(revision 4942)
 +++ src/http/ngx_http_upstream.c	(working copy)
 @@ -427,6 +427,13 @@
      ngx_log_debug1(NGX_LOG_DEBUG_HTTP, c->log, 0,
@@ -1985,7 +1985,7 @@ Index: src/http/ngx_http_upstream.c
      }
 Index: src/http/ngx_http_core_module.h
 ===================================================================
---- src/http/ngx_http_core_module.h	(revision 4899)
+--- src/http/ngx_http_core_module.h	(revision 4942)
 +++ src/http/ngx_http_core_module.h	(working copy)
 @@ -75,6 +75,9 @@
  #if (NGX_HTTP_SSL)
@@ -2012,9 +2012,9 @@ Index: src/http/ngx_http_core_module.h
  
 Index: src/http/ngx_http_request_body.c
 ===================================================================
---- src/http/ngx_http_request_body.c	(revision 4899)
+--- src/http/ngx_http_request_body.c	(revision 4942)
 +++ src/http/ngx_http_request_body.c	(working copy)
-@@ -39,11 +39,37 @@
+@@ -41,11 +41,38 @@
  
      r->main->count++;
  
@@ -2028,7 +2028,8 @@ Index: src/http/ngx_http_request_body.c
 +    if (r->spdy_stream) {
 +        if (!r->request_body) {
 +            if (ngx_http_spdy_init_request_body(r) != NGX_OK) {
-+                return NGX_HTTP_INTERNAL_SERVER_ERROR;
++                rc = NGX_HTTP_INTERNAL_SERVER_ERROR;
++                goto done;
 +            }
 +        }
 +
@@ -2051,9 +2052,9 @@ Index: src/http/ngx_http_request_body.c
 +    }
 +
      if (ngx_http_test_expect(r) != NGX_OK) {
-         return NGX_HTTP_INTERNAL_SERVER_ERROR;
-     }
-@@ -445,6 +471,11 @@
+         rc = NGX_HTTP_INTERNAL_SERVER_ERROR;
+         goto done;
+@@ -450,6 +477,11 @@
          return NGX_OK;
      }
  
@@ -5446,7 +5447,7 @@ Index: src/http/ngx_http_spdy.c
 +}
 Index: src/http/ngx_http.c
 ===================================================================
---- src/http/ngx_http.c	(revision 4899)
+--- src/http/ngx_http.c	(revision 4942)
 +++ src/http/ngx_http.c	(working copy)
 @@ -1225,6 +1225,9 @@
  #if (NGX_HTTP_SSL)
@@ -5500,7 +5501,7 @@ Index: src/http/ngx_http.c
              && (addr[i].wc_head == NULL
 Index: auto/sources
 ===================================================================
---- auto/sources	(revision 4899)
+--- auto/sources	(revision 4942)
 +++ auto/sources	(working copy)
 @@ -324,6 +324,16 @@
  HTTP_FILE_CACHE_SRCS=src/http/ngx_http_file_cache.c
@@ -5521,7 +5522,7 @@ Index: auto/sources
  
 Index: auto/options
 ===================================================================
---- auto/options	(revision 4899)
+--- auto/options	(revision 4942)
 +++ auto/options	(working copy)
 @@ -60,6 +60,7 @@
  HTTP_CHARSET=YES
@@ -5541,7 +5542,7 @@ Index: auto/options
          --without-http_access_module)    HTTP_ACCESS=NO             ;;
 Index: auto/modules
 ===================================================================
---- auto/modules	(revision 4899)
+--- auto/modules	(revision 4942)
 +++ auto/modules	(working copy)
 @@ -119,6 +119,7 @@
  HTTP_FILTER_MODULES="$HTTP_WRITE_FILTER_MODULE \
