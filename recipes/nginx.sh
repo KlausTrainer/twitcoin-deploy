@@ -19,7 +19,7 @@ git checkout $NGINX_GIT_REF
 
 # apply SPDY patch
 cp $SUNZI_WORKING_DIRECTORY/files/patch.spdy.txt .
-patch -p0 < patch.spdy.txt
+patch -p1 < patch.spdy.txt
 
 # configure, make, and install
 ./configure --prefix=$NGINX_INSTALL_PREFIX \
@@ -35,6 +35,7 @@ patch -p0 < patch.spdy.txt
     --http-uwsgi-temp-path=$TMP_PATH/nginx-uwsgi_temp \
     --http-scgi-temp-path=$TMP_PATH/nginx-scgi_temp \
     --with-http_ssl_module \
+    --with-http_spdy_module \
     --without-http_fastcgi_module \
     --without-http_scgi_module \
     --without-http_autoindex_module \
