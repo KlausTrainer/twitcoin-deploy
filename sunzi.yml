@@ -5,7 +5,7 @@ attributes:
   nginx_git_ref: v1.3.14
   erlang_git_ref: OTP_R15B03-1
   rebar_git_ref: master
-  bitcoind_git_ref: v0.7.2
+  bitcoind_git_ref: v0.8.0
 
 # Remote recipes here will be downloaded to compiled/recipes.
 recipes:
