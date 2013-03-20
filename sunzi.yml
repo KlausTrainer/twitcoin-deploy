@@ -3,7 +3,7 @@
 attributes:
   tmp_path: /tmp
   nginx_git_ref: v1.3.14
-  erlang_git_ref: OTP_R15B03-1
+  erlang_git_ref: OTP_R16B
   rebar_git_ref: master
   bitcoind_git_ref: v0.8.1
 
