@@ -17,10 +17,6 @@ git clone --depth=1 https://github.com/nginx/nginx.git
 cd nginx
 git checkout $NGINX_GIT_REF
 
-# apply SPDY patch
-cp $SUNZI_WORKING_DIRECTORY/files/patch.spdy.txt .
-patch -p1 < patch.spdy.txt
-
 # configure, make, and install
 ./configure --prefix=$NGINX_INSTALL_PREFIX \
     --sbin-path=$NGINX_INSTALL_PREFIX/sbin/nginx \

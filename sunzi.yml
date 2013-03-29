@@ -2,7 +2,7 @@
 # Dynamic variables here will be compiled to individual files in compiled/attributes.
 attributes:
   tmp_path: /tmp
-  nginx_git_ref: v1.3.14
+  nginx_git_ref: v1.3.15
   erlang_git_ref: OTP_R16B
   rebar_git_ref: master
   bitcoind_git_ref: v0.8.1
@@ -13,7 +13,6 @@ recipes:
 # Files specified here will be copied to compiled/files.
 files:
   # nginx
-  - files/patch.spdy.txt
   - files/nginx.conf
   - files/nginx-upstart.conf
   - files/twitcoin.net.pem
