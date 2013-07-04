@@ -13,9 +13,9 @@ SUNZI_WORKING_DIRECTORY="$(pwd)"
 # fetch and extract nginx
 cd $TMP_PATH
 rm -rf nginx
-git clone --depth=1 https://github.com/nginx/nginx.git
+git clone -n --depth=1 https://github.com/nginx/nginx.git
 cd nginx
-git checkout $NGINX_GIT_REF
+git checkout -q $NGINX_GIT_REF
 
 # configure, make, and install
 ./configure --prefix=$NGINX_INSTALL_PREFIX \

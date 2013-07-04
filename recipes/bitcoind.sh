@@ -9,9 +9,10 @@ SUNZI_WORKING_DIRECTORY="$(pwd)"
 
 cd $TMP_PATH
 rm -rf bitcoin
-git clone --depth=1 https://github.com/bitcoin/bitcoin.git
-cd bitcoin/src
-git checkout $BITCOIND_GIT_REF
+git clone -n --depth=1 https://github.com/bitcoin/bitcoin.git
+cd bitcoin
+git checkout -q $BITCOIND_GIT_REF
+cd src
 
 USE_UPNP=- make -j 2 -e -f makefile.unix
 

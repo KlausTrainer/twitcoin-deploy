@@ -9,9 +9,9 @@ SUNZI_WORKING_DIRECTORY="$(pwd)"
 
 cd $TMP_PATH
 rm -rf otp
-git clone --depth=1 https://github.com/erlang/otp.git
+git clone -n --depth=1 https://github.com/erlang/otp.git
 cd otp
-git checkout $ERLANG_GIT_REF
+git checkout -q $ERLANG_GIT_REF
 
 ./otp_build autoconf
 ./configure --prefix=/usr/local --without-javac --enable-halfword-emulator --disable-hipe

@@ -8,7 +8,6 @@ SUNZI_WORKING_DIRECTORY="$(pwd)"
 cd $TMP_PATH
 rm -rf twitcoin
 git clone --depth=1 https://github.com/KlausTrainer/twitcoin.git
-
 cd twitcoin
 
 make

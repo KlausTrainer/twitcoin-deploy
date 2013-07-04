@@ -9,9 +9,9 @@ SUNZI_WORKING_DIRECTORY="$(pwd)"
 
 cd $TMP_PATH
 rm -rf rebar
-git clone --depth=1 https://github.com/basho/rebar.git
+git clone -n --depth=1 https://github.com/basho/rebar.git
 cd rebar
-git checkout $REBAR_GIT_REF
+git checkout -q $REBAR_GIT_REF
 
 ./bootstrap
 
